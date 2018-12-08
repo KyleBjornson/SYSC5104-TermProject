@@ -24,7 +24,7 @@ public:
      *
      * @param n name assigned to the port
      */
-     explicit ROOM1_OUT(const std::string &n = "room1_out") noexcept : port<TIME, MSG>(n) {}//printf("M1 CREATED \n");
+     explicit ROOM1_OUT(const std::string &n = "room_out") noexcept : port<TIME, MSG>(n) {}//printf("M1 CREATED \n");
      void print() noexcept{} //printf("MOTOR 1 \n");
      bool pDriver(Value &v) const noexcept;
 };
@@ -39,7 +39,7 @@ public:
      *
      * @param n name assigned to the port
      */
-     explicit ROOM2_OUT(const std::string &n = "room2_out") noexcept : port<TIME, MSG>(n) {}//printf("M2 CREATED \n");
+     explicit ROOM2_OUT(const std::string &n = "room_out") noexcept : port<TIME, MSG>(n) {}//printf("M2 CREATED \n");
      void print() noexcept{}//printf("MOTOR 2 \n");
      bool pDriver(Value &v) const noexcept;
 

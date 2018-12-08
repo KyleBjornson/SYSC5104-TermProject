@@ -17,10 +17,16 @@ using namespace boost::simulation;
 using namespace boost::simulation::pdevs;
 using namespace boost::simulation::pdevs::basic_models;
 
+#define AMBIENT_LIGHT_THRESHOLD 0.5f
+#define TEMPERATURE_THRESHOLD 500
+
 //DigitalIn hwbtn(PC_13);
 
 DigitalIn leftSensor(A0);
 DigitalIn rightSensor(A3);
+
+AnalogIn ambientLightSensor(A4);
+AnalogIn temperatureSensor(A2);
 
 DigitalOut room1Led1(D6);
 DigitalOut room1Led2(D7);
@@ -86,17 +92,40 @@ bool LIGHT_IN_RIGHT<TIME, MSG>::pDriver(Value &v) const noexcept {
 	return true;
 }
 
+template<class TIME, class MSG>
+bool AMBIENT_LIGHT_IN<TIME, MSG>::pDriver(Value &v) const noexcept {
+    if(ambientLightSensor.read() > AMBIENT_LIGHT_THRESHOLD)
+    	v = 1;
+    else
+    	v = 0;
+	//printf("Light value = %d  \n",v);
+	return true;
+}
+
+template<class TIME, class MSG>
+bool TEMPERATURE_IN<TIME, MSG>::pDriver(Value &v) const noexcept {
+    if(temperatureSensor > TEMPERATURE_THRESHOLD)
+    	v = 1;
+    else
+    	v = 0;
+	//printf("Light value = %d  \n",v);
+	return true;
+}
+
 
 /* OUTPUT PORTS DRIVERS */
 template<class TIME, class MSG>
 bool ROOM1_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{ //motor left
 
-	if (v == 1) {
-		room1Led1 = 1;
-		room1Led2 = 1;
-	} else {
+	if (v == 0) {
 		room1Led1 = 0;
 		room1Led2 = 0;
+	} else if (v == 1) {
+		room1Led1 = 0;
+		room1Led2 = 1;
+	} else {
+		room1Led1 = 1;
+		room1Led2 = 1;
 	}
 
 	//if(v == 1){
@@ -110,12 +139,15 @@ bool ROOM1_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{ //motor left
 template<class TIME, class MSG>
 bool ROOM2_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{
 
-	if (v == 1) {
-		room2Led1 = 1;
-		room2Led2 = 1;
-	} else {
+	if (v == 0) {
 		room2Led1 = 0;
 		room2Led2 = 0;
+	} else if (v == 1) {
+		room2Led1 = 0;
+		room2Led2 = 1;
+	} else {
+		room2Led1 = 1;
+		room2Led2 = 1;
 	}
 
 	return true;

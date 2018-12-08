@@ -39,7 +39,7 @@ public:
      * @param n Name assigned to the port.
      * @param polling Polling period associated with the port.
      */
-     explicit LIGHT_IN_LEFT(const std::string &n = "light_in_left", const TIME &polling = TIME(0,0,0,200)) noexcept : port<TIME, MSG>(n,polling) {}
+     explicit LIGHT_IN_LEFT(const std::string &n = "light_in", const TIME &polling = TIME(0,0,0,200)) noexcept : port<TIME, MSG>(n,polling) {}
      void print()  noexcept {}
      bool pDriver(Value &v) const noexcept;
 
@@ -56,7 +56,41 @@ public:
      * @param n Name assigned to the port.
      * @param polling Polling period associated with the port.
      */
-     explicit LIGHT_IN_RIGHT(const std::string &n = "light_in_right", const TIME &polling = TIME(0,0,0,200)) noexcept : port<TIME, MSG>(n,polling) {}
+     explicit LIGHT_IN_RIGHT(const std::string &n = "light_in", const TIME &polling = TIME(0,0,0,200)) noexcept : port<TIME, MSG>(n,polling) {}
+     void print()  noexcept {}
+     bool pDriver(Value &v) const noexcept;
+
+};
+
+template<class TIME, class MSG>
+class AMBIENT_LIGHT_IN : public port<TIME, MSG>
+{
+
+public:
+    /**
+     * @brief light_sensor constructor.
+     *
+     * @param n Name assigned to the port.
+     * @param polling Polling period associated with the port.
+     */
+     explicit AMBIENT_LIGHT_IN(const std::string &n = "ambient_light_in", const TIME &polling = TIME(0,0,0,200)) noexcept : port<TIME, MSG>(n,polling) {}
+     void print()  noexcept {}
+     bool pDriver(Value &v) const noexcept;
+
+};
+
+template<class TIME, class MSG>
+class TEMPERATURE_IN : public port<TIME, MSG>
+{
+
+public:
+    /**
+     * @brief light_sensor constructor.
+     *
+     * @param n Name assigned to the port.
+     * @param polling Polling period associated with the port.
+     */
+     explicit TEMPERATURE_IN(const std::string &n = "temperature_in", const TIME &polling = TIME(0,0,0,200)) noexcept : port<TIME, MSG>(n,polling) {}
      void print()  noexcept {}
      bool pDriver(Value &v) const noexcept;
 
