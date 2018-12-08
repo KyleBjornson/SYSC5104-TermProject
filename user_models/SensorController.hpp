@@ -36,13 +36,15 @@ class SensorController : public atomic<TIME, MSG>
     TIME _next;
     std::vector<MSG> _outvalue;
 private:
-    enum State {IDLE, PREP_RX, WAIT_DATA, TX_DATA, PREP_STOP};
-    enum Port {sctrl_start_in, sctrl_light_in, sctrl_mctrl_in, sctrl_mctrl_out, sctrl_start_out};
-    std::string portName[5];
+    enum State {IDLE, L1_off, L2_off, L1_on, L2_on};
+    enum Port {sctrl_light_left_in, sctrl_light_right_in, sctrl_room1_out, sctrl_room2_out, sctrl_emerg1_out, sctrl_emerg2_out};
+    std::string portName[6];
     State _state;
-    MSG _outputMessage1,_outputMessage2;
+    MSG _outputMessage1,_outputMessage2, _outputMessage3, _outputMessage4;
 	//Variables:
-    int sensor_input = 0;
+
+    bool toggle = true;
+
 	TIME scTxTime = TIME(00,00,00,050);
 	TIME scRxPrepTime = TIME(00,00,00,050);
 	const TIME infinity=boost::simulation::model<TIME>::infinity;
@@ -54,25 +56,17 @@ public:
      * @brief SensorController constructor.
      */
     explicit SensorController(const std::string &n = "sctrl") noexcept : _next(infinity), _outvalue(std::vector<MSG>{}),_state(State::IDLE), _outputMessage1(), _outputMessage2() {
-    	portName[0] = "start_in"; portName[1] = "light_in"; portName[2] = "MCTRL_IN"; portName[3] = "SCTRL_OUT"; portName[4] = "START_OUT";
+    	portName[0] = "light_in_left"; portName[1] = "light_in_right"; portName[2] = "room1_out"; portName[3] = "room2_out"; portName[4] = "emergency1_out"; portName[5] = "emergency2_out";
     }
 
     /**
      * @brief internal function.
      */
     void internal() noexcept {
-    	switch (_state){
-    		case PREP_STOP:
-    			_state = IDLE;
-    			_next = infinity;
-    			break;
 
-    		case PREP_RX:
-    		case TX_DATA:
-    			_state = WAIT_DATA;
-    			_next = infinity;
-    			break;
-    	}
+			_state = IDLE;
+			_next = infinity;
+
 
     }
     /**
@@ -87,30 +81,30 @@ public:
      * @return MSG defined in construction.
      */
     std::vector<MSG> out() const noexcept {
-    	switch (_state){
 
-    			case PREP_STOP:
-					_outputMessage1 = MSG(portName[sctrl_start_out], STOP_PROC); //Stop Light Sensor
-					_outputMessage2 = MSG(portName[sctrl_mctrl_out], STOP_PROC); //Stop Movement Ctrl
-					return std::vector<MSG>{_outputMessage1, _outputMessage2};
+    	if (_state == L1_on) {
+    		_outputMessage1 = MSG(portName[sctrl_room1_out], 1); //Stop Light Sensor
+    		_outputMessage2 = MSG(portName[sctrl_room2_out], 1); //Stop Movement Ctrl
+    		return std::vector<MSG>{_outputMessage1, _outputMessage2};
+    	} else if (_state == L1_off) {
+    		_outputMessage1 = MSG(portName[sctrl_room1_out], 0); //Stop Light Sensor
+    		_outputMessage2 = MSG(portName[sctrl_room2_out], 0); //Stop Movement Ctrl
+    		return std::vector<MSG>{_outputMessage1, _outputMessage2};
+    	} else if (_state == L2_on) {
+    		_outputMessage1 = MSG(portName[sctrl_emerg1_out], 1); //Stop Light Sensor
+    		_outputMessage2 = MSG(portName[sctrl_emerg2_out], 1); //Stop Movement Ctrl
+    		return std::vector<MSG>{_outputMessage1, _outputMessage2};
+    	} else if (_state == L2_off) {
+    		_outputMessage1 = MSG(portName[sctrl_emerg1_out], 0); //Stop Light Sensor
+    		_outputMessage2 = MSG(portName[sctrl_emerg2_out], 0); //Stop Movement Ctrl
+    		return std::vector<MSG>{_outputMessage1, _outputMessage2};
+    	}
 
-    			case PREP_RX:
-					_outputMessage1 = MSG(portName[sctrl_start_out], START_PROC); //Start Light Sensor
-					return std::vector<MSG>{_outputMessage1};
-
-    			case TX_DATA: {
-    				int output_val;
-
-    				if(sensor_input == DARK)
-    					output_val = ON_TRACK;
-    				else if(sensor_input == BRIGHT)
-    					output_val = OFF_TRACK;
-
-    				_outputMessage1 = MSG(portName[sctrl_mctrl_out], output_val); //Send feedback to Movement Ctrl
-    				return std::vector<MSG>{_outputMessage1};
-    			}
-    		};
-    	return std::vector<MSG>{};
+		_outputMessage1 = MSG(portName[sctrl_room1_out], 0); //Stop Light Sensor
+		_outputMessage2 = MSG(portName[sctrl_room2_out], 0); //Stop Movement Ctrl
+		_outputMessage3 = MSG(portName[sctrl_emerg1_out], 0); //Stop Light Sensor
+		_outputMessage4 = MSG(portName[sctrl_emerg2_out], 0); //Stop Movement Ctrl
+    	return std::vector<MSG>{_outputMessage1, _outputMessage2, _outputMessage3, _outputMessage4};
 
     }
     /**
@@ -122,30 +116,26 @@ public:
 
     	MSG msg = mb.back();
 
-    	if (msg.port == portName[sctrl_start_in]){
-    			if(_state == IDLE && msg.val == START_PROC){
-    				_state = PREP_RX;
-    				_next = scRxPrepTime;
-    			}
+    	_next = Time::Zero;
+    	_state = IDLE;
 
-    			else if (msg.val == STOP_PROC) {
-    				_state = PREP_STOP;
-    				_next = Time::Zero;
-    			}
-    		}
-    		else if (msg.port == portName[sctrl_light_in]){
-    			if(_state == WAIT_DATA) {
-    				sensor_input = static_cast<int>(msg.val);
-
-    				if(sensor_input == ALL_DARK) {
-    					_state = PREP_STOP;
-    					_next = Time::Zero;
-    				} else {
-    					_state = TX_DATA;
-    					_next = scTxTime;
-    				}
-    			}
-    		}
+    	if (msg.port == portName[sctrl_light_left_in]) {
+			if(msg.val == 1) {
+				_state = L1_on;
+				_next = Time::Zero;
+			} else {
+				_state = L1_off;
+				_next = Time::Zero;
+			}
+		} else if (msg.port == portName[sctrl_light_right_in]) {
+			if(msg.val == 1) {
+				_state = L2_on;
+				_next = Time::Zero;
+			} else {
+				_state = L2_off;
+				_next = Time::Zero;
+			}
+		}
     }
 
     /**
