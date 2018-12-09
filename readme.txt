@@ -1,10 +1,4 @@
-July 28,2015
+# Inteligent Building LED Controller - Term Project - Fall 2018 - sysc5104
 
-Embedded CD-Boost
-- Updated MBED library
-- Replaced trace semihosting implementation with serial printf (takes way less time, less overhead introduced)
-- Deleted trace
-- Need to use TeraTerm to see the printed messages 
+This project was prepared by Kyle Bjornson and Ben Earle for Prof. G. Wainer. A detailed explination of the model and all the tests run against it in the included document:
 
-August 1st
-Line Tracking Robot Example running on SeeedShieldBot
