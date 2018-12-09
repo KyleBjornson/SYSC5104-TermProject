@@ -1,6 +1,6 @@
 /*
 
- * userbtn_port.hpp
+ * sensors_port.hpp
  *
  *  Created on: Dec 9, 2018
  *      Author: Kyle and Ben
@@ -15,26 +15,13 @@ using namespace boost::simulation;
 using namespace boost::simulation::pdevs;
 using namespace boost::simulation::pdevs::basic_models;
 
-//template<class TIME, class MSG>
-//class START_IN : public port<TIME, MSG>
-//{
-//
-//public:
-//    /**
-//     * @brief startbtn constructor.
-//     */
-//     explicit START_IN(const std::string &n = "start_in", const TIME &polling = TIME(0,0,1,0)) noexcept : port<TIME, MSG>(n,polling) {}
-//     void print()  noexcept {}
-//     bool pDriver(Value &v) const noexcept;
-//};
-
 template<class TIME, class MSG>
 class FIRE_ALARM : public port<TIME, MSG>
 {
 
 public:
     /**
-     * @brief light_sensor constructor.
+     * @brief fire_alarm constructor.
      *
      * @param n Name assigned to the port.
      * @param polling Polling period associated with the port.
@@ -51,7 +38,7 @@ class LIGHT_IN_LEFT : public port<TIME, MSG>
 
 public:
     /**
-     * @brief light_sensor constructor.
+     * @brief light_in_left constructor.
      *
      * @param n Name assigned to the port.
      * @param polling Polling period associated with the port.
@@ -68,7 +55,7 @@ class LIGHT_IN_RIGHT : public port<TIME, MSG>
 
 public:
     /**
-     * @brief light_sensor constructor.
+     * @brief light_in_right constructor.
      *
      * @param n Name assigned to the port.
      * @param polling Polling period associated with the port.
@@ -85,7 +72,7 @@ class AMBIENT_LIGHT_IN : public port<TIME, MSG>
 
 public:
     /**
-     * @brief light_sensor constructor.
+     * @brief ambient_light_in constructor.
      *
      * @param n Name assigned to the port.
      * @param polling Polling period associated with the port.
@@ -102,7 +89,7 @@ class TEMPERATURE_IN : public port<TIME, MSG>
 
 public:
     /**
-     * @brief light_sensor constructor.
+     * @brief temperature_in constructor.
      *
      * @param n Name assigned to the port.
      * @param polling Polling period associated with the port.

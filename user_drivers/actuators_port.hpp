@@ -1,5 +1,5 @@
 /*
- * motors_port.hpp
+ * actuators_port.hpp
  *
  *  Created on: Dec 9, 2018
  *      Author: Kyle and Ben
@@ -20,12 +20,12 @@ class ROOM1_OUT : public port<TIME, MSG>
 
 public:
     /**
-     * @brief motor1_port constructor.
+     * @brief room1 constructor.
      *
      * @param n name assigned to the port
      */
-     explicit ROOM1_OUT(const std::string &n = "room_out1") noexcept : port<TIME, MSG>(n) {}//printf("M1 CREATED \n");
-     void print() noexcept{} //printf("MOTOR 1 \n");
+     explicit ROOM1_OUT(const std::string &n = "room_out1") noexcept : port<TIME, MSG>(n) {}
+     void print() noexcept{}
      bool pDriver(Value &v) const noexcept;
 };
 
@@ -35,12 +35,12 @@ class ROOM2_OUT : public port<TIME, MSG>
 
 public:
     /**
-     * @brief motor2_port constructor.
+     * @brief room2 constructor.
      *
      * @param n name assigned to the port
      */
-     explicit ROOM2_OUT(const std::string &n = "room_out2") noexcept : port<TIME, MSG>(n) {}//printf("M2 CREATED \n");
-     void print() noexcept{}//printf("MOTOR 2 \n");
+     explicit ROOM2_OUT(const std::string &n = "room_out2") noexcept : port<TIME, MSG>(n) {}
+     void print() noexcept{}
      bool pDriver(Value &v) const noexcept;
 
 };
@@ -51,12 +51,12 @@ class EMERGENCY1_OUT : public port<TIME, MSG>
 
 public:
     /**
-     * @brief motor2_port constructor.
+     * @brief emergency1 constructor.
      *
      * @param n name assigned to the port
      */
-     explicit EMERGENCY1_OUT(const std::string &n = "emerg_out1") noexcept : port<TIME, MSG>(n) {}//printf("M2 CREATED \n");
-     void print() noexcept{}//printf("MOTOR 2 \n");
+     explicit EMERGENCY1_OUT(const std::string &n = "emerg_out1") noexcept : port<TIME, MSG>(n) {}
+     void print() noexcept{}
      bool pDriver(Value &v) const noexcept;
 
 };
@@ -67,12 +67,12 @@ class EMERGENCY2_OUT : public port<TIME, MSG>
 
 public:
     /**
-     * @brief motor2_port constructor.
+     * @brief emergency2 constructor.
      *
      * @param n name assigned to the port
      */
-     explicit EMERGENCY2_OUT(const std::string &n = "emerg_out2") noexcept : port<TIME, MSG>(n) {}//printf("M2 CREATED \n");
-     void print() noexcept{}//printf("MOTOR 2 \n");
+     explicit EMERGENCY2_OUT(const std::string &n = "emerg_out2") noexcept : port<TIME, MSG>(n) {}
+     void print() noexcept{}
      bool pDriver(Value &v) const noexcept;
 
 };

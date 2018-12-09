@@ -1,5 +1,5 @@
 /*
- * SensorController.hpp
+ * RoomController.hpp
  *
  *  Created on: Dec 9, 2018
  *      Author: Kyle and Ben
@@ -10,7 +10,6 @@
 
 #include <boost/any.hpp>
 #include <boost/simulation/pdevs/atomic.hpp>
-#include "commonH.h"
 #include "SWO.h"
 #include "mbed.h"
 
@@ -20,15 +19,7 @@ namespace pdevs {
 namespace basic_models {
 /**
  * @brief RoomController PDEVS Model
- *
- * SensorController PDEVS Model():
- * - X = {(start_in, {START, STOP}); (distance_in, {DISTANCE}); (light1_in, {BRIGHT, DARK}); (light2_in, {BRIGHT, DARK}); (light3_in, {BRIGHT, DARK}); (light4_in, {BRIGHT, DARK})}
- * - Y = {(sctrl_ls1start_out, {START, STOP}); (sctrl_ls2start_out, {START, STOP}); (sctrl_ls3start_out, {START, STOP}); (sctrl_ls4start_out, {START, STOP}); (proxystart_out, {START, STOP }); (stopdata_out, {STOP, NO_OBSTACLE}); (lsdata_out, {ON_TRACK, GO_LEFT, GO_RIGHT }}
- * - S = {“PREP_START,” “WAIT_DATA,” “FOUND_LIGHT,” “FOUND_ALL_LIGHT,” “FOUND_DISTANCE,” “PREP_IDLE,” “IDLE”}
- * - internal -> See DEVS Spec Doc
- * - external -> See DEVS Spec Doc
- * - out      -> See DEVS Spec Doc
- * - advance  -> See DEVS Spec Doc
+ * See DEVS Spec Doc
 */
 template<class TIME, class MSG>
 class RoomController1 : public atomic<TIME, MSG>
@@ -128,13 +119,16 @@ public:
      */
     void confluence(const std::vector<MSG>& mb, const TIME& t)  noexcept  {
     	internal();
-		//external(mb,t);
     }
 
     void print()  noexcept {SWO_PrintString("rctrl1");}
 
 };
 
+/* Second RoomController.
+ * -> Our intention was to instantiate the first AlarmOutController twice in main.cpp
+ *    but we were unable to do so.
+ */
 
 template<class TIME, class MSG>
 class RoomController2 : public atomic<TIME, MSG>
@@ -234,7 +228,6 @@ public:
      */
     void confluence(const std::vector<MSG>& mb, const TIME& t)  noexcept  {
     	internal();
-		//external(mb,t);
     }
 
     void print()  noexcept {SWO_PrintString("rctrl2");}

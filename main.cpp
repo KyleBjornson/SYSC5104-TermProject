@@ -8,8 +8,6 @@
 #include <stdio.h>
 #include "eTime.h"
 #include "eMessage.hpp"
-#include "linerobot_driver.hpp"
-
 #include "mbed.h"
 
 // PDEVS core related include
@@ -18,6 +16,8 @@
 #include <boost/simulation.hpp>
 #include <boost/rational.hpp>
 #include <boost/lexical_cast.hpp>
+
+#include "user_drivers/drivers.hpp"
 #include "user_models/RoomController.hpp"
 #include "user_models/AlarmMonitor.hpp"
 #include "user_models/AlarmOutController.hpp"
@@ -85,7 +85,6 @@ main(int argc, char* argv[])
     // Execution parameter definition
 	printf("Preparing runner \n");
 	Time initial_time{Time::currentTime()};
-	//erunner<Time, Message> root{ControlUnit, {{light_left,sctrl},{light_right,sctrl},{ambient_light,sctrl},{temperature,sctrl}} , {{room1,sctrl},{room2,sctrl},{emerg1,sctrl},{emerg2,sctrl}} };
 	erunner<Time, Message> root {
 		ControlUnit,
 		{//External Input Coupling

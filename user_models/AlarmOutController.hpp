@@ -10,7 +10,6 @@
 
 #include <boost/any.hpp>
 #include <boost/simulation/pdevs/atomic.hpp>
-#include "commonH.h"
 #include "SWO.h"
 #include "mbed.h"
 
@@ -19,16 +18,8 @@ namespace simulation {
 namespace pdevs {
 namespace basic_models {
 /**
- * @brief RoomController PDEVS Model
- *
- * SensorController PDEVS Model():
- * - X = {(start_in, {START, STOP}); (distance_in, {DISTANCE}); (light1_in, {BRIGHT, DARK}); (light2_in, {BRIGHT, DARK}); (light3_in, {BRIGHT, DARK}); (light4_in, {BRIGHT, DARK})}
- * - Y = {(sctrl_ls1start_out, {START, STOP}); (sctrl_ls2start_out, {START, STOP}); (sctrl_ls3start_out, {START, STOP}); (sctrl_ls4start_out, {START, STOP}); (proxystart_out, {START, STOP }); (stopdata_out, {STOP, NO_OBSTACLE}); (lsdata_out, {ON_TRACK, GO_LEFT, GO_RIGHT }}
- * - S = {“PREP_START,” “WAIT_DATA,” “FOUND_LIGHT,” “FOUND_ALL_LIGHT,” “FOUND_DISTANCE,” “PREP_IDLE,” “IDLE”}
- * - internal -> See DEVS Spec Doc
- * - external -> See DEVS Spec Doc
- * - out      -> See DEVS Spec Doc
- * - advance  -> See DEVS Spec Doc
+ * @brief AlarmOutController DEVS Model
+ * See DEVS Spec Doc
 */
 template<class TIME, class MSG>
 class AlarmOutController1 : public atomic<TIME, MSG>
@@ -56,7 +47,7 @@ private:
 
 public:
     /**
-     * @brief SensorController constructor.
+     * @brief AlarmOutController constructor.
      */
     explicit AlarmOutController1(const std::string &n = "actrl1") noexcept : _next(infinity), _outvalue(std::vector<MSG>{}),_state(State::IDLE), _outputMessage(){
     	portName[fire_alarm_in] = "fire_alarm_in";
@@ -126,13 +117,16 @@ public:
      */
     void confluence(const std::vector<MSG>& mb, const TIME& t)  noexcept  {
     	internal();
-		//external(mb,t);
     }
 
     void print()  noexcept {SWO_PrintString("actrl1");}
 
 };
 
+/* Second AlarmOutController.
+ * -> Our intention was to instantiate the first AlarmOutController twice in main.cpp
+ *    but we were unable to do so.
+ */
 
 template<class TIME, class MSG>
 class AlarmOutController2 : public atomic<TIME, MSG>
@@ -230,7 +224,6 @@ public:
      */
     void confluence(const std::vector<MSG>& mb, const TIME& t)  noexcept  {
     	internal();
-		//external(mb,t);
     }
 
     void print()  noexcept {SWO_PrintString("actrl2");}

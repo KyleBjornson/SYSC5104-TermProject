@@ -1,4 +1,4 @@
-# Only modify USER_OBJECTS and INCLUDE_USER_PATHS! Do not modify anything else
+# Makefile for Building Controller
 
 GCC_BIN = 
 PROJECT = LineTrackingRobot_ECDBoostNBMED

@@ -1,12 +1,12 @@
 /*
- * robocart_driver.hpp
+ * drivers.hpp
  *
  *  Created on: Dec 9, 2018
  *      Author: Kyle and Ben
  */
 
-#ifndef robocart_driver_HPP_
-#define robocart_driver_HPP_
+#ifndef drivers_HPP_
+#define drivers_HPP_
 
 #include "actuators_port.hpp"
 #include "sensors_port.hpp"
@@ -18,10 +18,9 @@ using namespace boost::simulation::pdevs;
 using namespace boost::simulation::pdevs::basic_models;
 
 #define AMBIENT_LIGHT_THRESHOLD 0.5f
-#define TEMPERATURE_THRESHOLD 0.5f //TODO: Is it hot in here?? We don't know yet..
+#define TEMPERATURE_THRESHOLD 0.5f
 
-//DigitalIn hwbtn(PC_13);
-
+//Define Pins
 DigitalIn leftSensor(A0);
 DigitalIn rightSensor(A3);
 
@@ -43,26 +42,7 @@ DigitalOut emerg1Green(D3);
 DigitalOut emerg2Red(D4);
 DigitalOut emerg2Green(D5);
 
-/* INPUT PORTS DRIVERS */
-//template<class TIME, class MSG>
-//bool START_IN<TIME, MSG>::pDriver(Value &v) const noexcept {
-//	  if(!hwbtn){
-//		if(!isStarted){
-//			isStarted = true;
-//			v = 10;
-//		}
-//		else{
-//			isStarted = false;
-//			v = 11;
-//		}
-//		//printf("Button Pressed %d \n",v);
-//		return true;
-//	  }
-//	  else{
-//		return false;
-//	  }
-//}
-
+//Init Pins to 0
 void initPins(void) {
 	fireAlarm.mode(PullUp);
 
@@ -80,7 +60,7 @@ void initPins(void) {
 	mot2En = 0;
 }
 
-
+//Test circuit connections
 void lightTest(void) {
 
 	room1Led1 = 1;
@@ -94,6 +74,9 @@ void lightTest(void) {
 	emerg2Green = 1;
 
 }
+
+/* INPUT PORTS DRIVERS */
+
 template<class TIME, class MSG>
 bool FIRE_ALARM<TIME, MSG>::pDriver(Value &v) const noexcept {
     if(fireAlarm == 0)
@@ -109,7 +92,6 @@ bool LIGHT_IN_LEFT<TIME, MSG>::pDriver(Value &v) const noexcept {
     	v = 1;
     else
     	v = 0;
-	//printf("Light value = %d  \n",v);
 	return true;
 }
 
@@ -119,7 +101,6 @@ bool LIGHT_IN_RIGHT<TIME, MSG>::pDriver(Value &v) const noexcept {
     	v = 1;
     else
     	v = 0;
-	//printf("Light value = %d  \n",v);
 	return true;
 }
 
@@ -129,7 +110,6 @@ bool AMBIENT_LIGHT_IN<TIME, MSG>::pDriver(Value &v) const noexcept {
     	v = 1;
     else
     	v = 0;
-	//printf("Light value = %d  \n",v);
 	return true;
 }
 
@@ -146,7 +126,7 @@ bool TEMPERATURE_IN<TIME, MSG>::pDriver(Value &v) const noexcept {
 
 /* OUTPUT PORTS DRIVERS */
 template<class TIME, class MSG>
-bool ROOM1_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{ //motor left
+bool ROOM1_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{
 
 	if (v == 0) {
 		room1Led1 = 0;
@@ -158,11 +138,6 @@ bool ROOM1_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{ //motor left
 		room1Led1 = 1;
 		room1Led2 = 1;
 	}
-
-	//if(v == 1){
-	//  bot.left_motor(0.08); //FWD the left motor
-	  //printf("M1 - FWD \n");
-	//}
 
 	return true;
 }
@@ -218,4 +193,4 @@ bool EMERGENCY2_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{
 	return true;
 }
 
-#endif /* robocart_driver_HPP_ */
+#endif /* drivers_HPP_ */
