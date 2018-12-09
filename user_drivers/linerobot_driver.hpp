@@ -18,7 +18,7 @@ using namespace boost::simulation::pdevs;
 using namespace boost::simulation::pdevs::basic_models;
 
 #define AMBIENT_LIGHT_THRESHOLD 0.5f
-#define TEMPERATURE_THRESHOLD 1.5f //TODO: Is it hot in here?? We don't know yet..
+#define TEMPERATURE_THRESHOLD 0.5f //TODO: Is it hot in here?? We don't know yet..
 
 //DigitalIn hwbtn(PC_13);
 
@@ -139,6 +139,7 @@ bool TEMPERATURE_IN<TIME, MSG>::pDriver(Value &v) const noexcept {
     	v = 1;
     else
     	v = 0;
+
 	return true;
 }
 

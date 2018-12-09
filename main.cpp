@@ -48,7 +48,7 @@ main(int argc, char* argv[])
 	printf("Creating atomic models ... \n");
 	auto rctrl1 = make_atomic_ptr<RoomController1<Time, Message>>();
 	auto rctrl2 = make_atomic_ptr<RoomController2<Time, Message>>();
-	auto amon = make_atomic_ptr<AlarmMonitor<Time, Message>>();
+	//auto amon = make_atomic_ptr<AlarmMonitor<Time, Message>>();
 	auto actrl1 = make_atomic_ptr<AlarmOutController1<Time, Message>>();
 	auto actrl2 = make_atomic_ptr<AlarmOutController2<Time, Message>>();
 
@@ -57,11 +57,13 @@ main(int argc, char* argv[])
 	printf("Creating Coupled models ... \n");
 	//shared_ptr<flattened_coupled<Time, Message>> ControlUnit( new flattened_coupled<Time, Message>{{sctrl,mctrl}, {sctrl}, {{sctrl,mctrl}}, {mctrl}});
 	shared_ptr<flattened_coupled<Time, Message>> ControlUnit(new flattened_coupled<Time, Message> {
-		{rctrl1, rctrl2, amon, actrl1, actrl2},
-		{rctrl1, rctrl2, amon, actrl1, actrl2},
+		{rctrl1, rctrl2, actrl1, actrl2},
+		{rctrl1, rctrl2, actrl1, actrl2},
+		//{rctrl1, rctrl2, amon, actrl1, actrl2},
+		//{rctrl1, rctrl2, amon, actrl1, actrl2},
 		{
-			{amon,actrl1},
-			{amon,actrl2}
+		//	{amon,actrl1},
+		//	{amon,actrl2}
 		},
 		{rctrl1, rctrl2, actrl1, actrl2}
 	});
@@ -91,9 +93,9 @@ main(int argc, char* argv[])
 			{ambient_light,rctrl1},
 			{light_right,rctrl2},
 			{ambient_light,rctrl2},
-			{fire_alarm,amon},
+			{fire_alarm,actrl2},
 			{fire_alarm,actrl1},
-			{temperature,amon},
+			{temperature,actrl1},
 			{temperature,actrl2},
 		},
 		{//External Output Coupling

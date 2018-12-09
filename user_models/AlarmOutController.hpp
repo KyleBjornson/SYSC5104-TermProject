@@ -60,7 +60,7 @@ public:
      */
     explicit AlarmOutController1(const std::string &n = "actrl1") noexcept : _next(infinity), _outvalue(std::vector<MSG>{}),_state(State::IDLE), _outputMessage(){
     	portName[fire_alarm_in] = "fire_alarm_in";
-    	portName[alarm_in] = "alarm_out";
+    	portName[alarm_in] = "temperature_in";
     	portName[emerg_out1] = "emerg_out1";
     }
 
@@ -164,7 +164,7 @@ public:
      */
     explicit AlarmOutController2(const std::string &n = "actrl2") noexcept : _next(infinity), _outvalue(std::vector<MSG>{}),_state(State::IDLE), _outputMessage(){
     	portName[heat_sensor_in] = "temperature_in";
-    	portName[alarm_in] = "alarm_out";
+    	portName[alarm_in] = "fire_alarm_in";
     	portName[emerg_out2] = "emerg_out2";
     }
 
@@ -210,14 +210,14 @@ public:
 			isAlarming = (msg.val == 1);
 		}
 
-    	if(isAlarming){
-    		if (isFire){
-    			_state = FIRE;
-    		} else {
-    			_state = SAFE;
-    		}
+    	if(isFire) {
+    		_state = FIRE;
     	} else {
-    		_state = IDLE;
+    		if (isAlarming){
+    			_state = SAFE;
+    		} else {
+    			_state = IDLE;
+    		}
     	}
     }
 
