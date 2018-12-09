@@ -658,7 +658,8 @@ main.o: main.cpp internal/eTime.h internal/hwTime.h \
  C:\repo\DEVS\boost_1_57_0/boost/detail/call_traits.hpp \
  C:\repo\DEVS\boost_1_57_0/boost/math/common_factor_rt.hpp \
  C:\repo\DEVS\boost_1_57_0/boost/math_fwd.hpp \
- user_models/RoomController.hpp user_models/commonH.h
+ user_models/RoomController.hpp user_models/commonH.h \
+ user_models/AlarmMonitor.hpp user_models/AlarmOutController.hpp
 
 internal/eTime.h:
 
@@ -2059,3 +2060,7 @@ C:\repo\DEVS\boost_1_57_0/boost/math_fwd.hpp:
 user_models/RoomController.hpp:
 
 user_models/commonH.h:
+
+user_models/AlarmMonitor.hpp:
+
+user_models/AlarmOutController.hpp:

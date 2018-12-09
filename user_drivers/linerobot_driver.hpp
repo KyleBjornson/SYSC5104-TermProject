@@ -1,8 +1,8 @@
 /*
  * robocart_driver.hpp
  *
- *  Created on: July 23, 2015
- *      Author: Daniella Niyonkuru
+ *  Created on: Dec 9, 2018
+ *      Author: Kyle and Ben
  */
 
 #ifndef robocart_driver_HPP_
@@ -18,26 +18,30 @@ using namespace boost::simulation::pdevs;
 using namespace boost::simulation::pdevs::basic_models;
 
 #define AMBIENT_LIGHT_THRESHOLD 0.5f
-#define TEMPERATURE_THRESHOLD 500
+#define TEMPERATURE_THRESHOLD 1.5f //TODO: Is it hot in here?? We don't know yet..
 
 //DigitalIn hwbtn(PC_13);
 
 DigitalIn leftSensor(A0);
 DigitalIn rightSensor(A3);
 
-AnalogIn ambientLightSensor(A4);
-AnalogIn temperatureSensor(A2);
+DigitalIn fireAlarm(D12);
+
+AnalogIn ambientLightSensor(A5);
+AnalogIn temperatureSensor(A4);
+
+DigitalOut mot1En(D9);
+DigitalOut mot2En(D10);
 
 DigitalOut room1Led1(D6);
 DigitalOut room1Led2(D7);
 DigitalOut room2Led1(D8);
-DigitalOut room2Led2(D9);
+DigitalOut room2Led2(D11);
 
 DigitalOut emerg1Red(D2);
 DigitalOut emerg1Green(D3);
 DigitalOut emerg2Red(D4);
 DigitalOut emerg2Green(D5);
-
 
 /* INPUT PORTS DRIVERS */
 //template<class TIME, class MSG>
@@ -60,6 +64,8 @@ DigitalOut emerg2Green(D5);
 //}
 
 void initPins(void) {
+	fireAlarm.mode(PullUp);
+
 	room1Led1 = 0;
 	room1Led2 = 0;
 	room2Led1 = 0;
@@ -69,8 +75,33 @@ void initPins(void) {
 	emerg1Green = 0;
 	emerg2Red = 0;
 	emerg2Green = 0;
+
+	mot1En = 0;
+	mot2En = 0;
 }
 
+
+void lightTest(void) {
+
+	room1Led1 = 1;
+	room1Led2 = 1;
+	room2Led1 = 1;
+	room2Led2 = 1;
+
+	emerg1Red = 1;
+	emerg1Green = 1;
+	emerg2Red = 1;
+	emerg2Green = 1;
+
+}
+template<class TIME, class MSG>
+bool FIRE_ALARM<TIME, MSG>::pDriver(Value &v) const noexcept {
+    if(fireAlarm == 0)
+    	v = 1;
+    else
+    	v = 0;
+	return true;
+}
 
 template<class TIME, class MSG>
 bool LIGHT_IN_LEFT<TIME, MSG>::pDriver(Value &v) const noexcept {
@@ -104,11 +135,10 @@ bool AMBIENT_LIGHT_IN<TIME, MSG>::pDriver(Value &v) const noexcept {
 
 template<class TIME, class MSG>
 bool TEMPERATURE_IN<TIME, MSG>::pDriver(Value &v) const noexcept {
-    if(temperatureSensor > TEMPERATURE_THRESHOLD)
+    if(temperatureSensor.read() > TEMPERATURE_THRESHOLD)
     	v = 1;
     else
     	v = 0;
-	//printf("Light value = %d  \n",v);
 	return true;
 }
 
@@ -155,11 +185,15 @@ bool ROOM2_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{
 
 template<class TIME, class MSG>
 bool EMERGENCY1_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{
-	if (v == 1) {
-		emerg1Red = 1;
+
+	if (v == 0) {
+		emerg1Red = 0;
+		emerg1Green = 0;
+	} else if (v == 1) {
+		emerg1Red = 0;
 		emerg1Green = 1;
 	} else {
-		emerg1Red = 0;
+		emerg1Red = 1;
 		emerg1Green = 0;
 	}
 
@@ -168,11 +202,15 @@ bool EMERGENCY1_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{
 
 template<class TIME, class MSG>
 bool EMERGENCY2_OUT<TIME, MSG>::pDriver(Value& v) const noexcept{
-	if (v == 1) {
-		emerg2Red = 1;
+
+	if (v == 0) {
+		emerg2Red = 0;
+		emerg2Green = 0;
+	} else if (v == 1) {
+		emerg2Red = 0;
 		emerg2Green = 1;
 	} else {
-		emerg2Red = 0;
+		emerg2Red = 1;
 		emerg2Green = 0;
 	}
 
